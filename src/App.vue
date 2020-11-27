@@ -13,7 +13,7 @@
     <table class="neck">
       <tr class="frets" v-for="(row, index) in rows" :key="index">
         <td class="fret" v-for="(note, index) in row" :key="index" >
-          <div class="note" v-show="isSelected(note)">
+          <div :class="[{ base: note === currentNote }, 'note']" v-show="isSelected(note)">
             {{ note }}
           </div>
         </td>
@@ -132,6 +132,11 @@ body {
 
         color: white;
       }
+
+      .note.base {
+        border: 2px solid red;
+      }
+
     }
   }
 
