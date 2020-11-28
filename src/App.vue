@@ -33,6 +33,11 @@
       </tr>
     </table>
 
+    <hr>
+
+    <div>
+      {{ selected }}
+    </div>
   </div>
 </template>
 
@@ -133,8 +138,13 @@ body {
         color: white;
       }
 
+      .note {
+        height: 100%;
+        line-height: 1.3rem;
+      }
+
       .note.base {
-        border: 2px solid red;
+        border: 2px dashed black;
       }
 
     }
