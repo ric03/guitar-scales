@@ -2,7 +2,7 @@
   <div id="app">
 
     <div class="selection">
-      <select name="notes" v-model="currentNote">
+      <select name="notes" v-model="current.base">
         <option v-for="(note, index) in availableNotes" :key="index" :value="note">{{ note }}</option>
       </select>
       <select name="types" @change="onChangeType($event)">
@@ -11,20 +11,20 @@
     </div>
 
     <table class="neck">
-      <tr class="frets" v-for="(row, index) in rows" :key="index">
-        <td class="fret" v-for="(note, index) in row" :key="index" >
-          <div :class="[{ base: note === currentNote }, 'note']" v-show="isSelected(note)">
+      <tr class="frets" v-for="(string, index) in strings" :key="index">
+        <td class="fret" v-for="(note, index) in string" :key="index" >
+          <div :class="[{ base: note === current.base }, 'note']" v-show="isSelected(note)">
             {{ note }}
           </div>
         </td>
         <td class="fret">
-          <div class="note" v-show="isSelected(row[0])">
-            {{ row[0] }}
+          <div class="note" v-show="isSelected(string[0])">
+            {{ string[0] }}
           </div>
         </td>        
       </tr>
       <tr class="markings">
-        <td class="marking" v-for="(_, index) in rows[0]" :key="index" >
+        <td class="marking" v-for="(_, index) in strings[0]" :key="index" >
           <div :class="'fret ' + 'fret_' + index" ></div>
         </td>
         <td class="marking">
@@ -64,9 +64,9 @@ export default {
       ]
     },
     selected() {
-      return this.tonescale.getScaleOf(this.currentNote, this.currentMode)
+      return this.tonescale.getScaleOf(this.current.base, this.current.mode)
     },
-    rows() {
+    strings() {
       return [
         this.tonescale.getRangeStartingWith('E'),
         this.tonescale.getRangeStartingWith('B'),
@@ -85,14 +85,16 @@ export default {
       
       const [ type, mode ] = event.target.value.split('.')
 
-      this.currentMode = types[type][mode]
+      this.current.mode = types[type][mode]
     }
   },
   data() {
     return {
       tonescale: createToneScaleOf(scales.chromatic),
-      currentNote: 'C',
-      currentMode: modes.major
+      current: {
+        base: 'C',
+        mode: modes.major
+      }
     }
   }
 }
