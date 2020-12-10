@@ -20,7 +20,7 @@
           </div>
         </td>
         <td class="fret">
-          <div class="note" v-show="isSelected(string[0])">
+          <div :class="[{ base: string[0] === current.base }, 'note']" v-show="isSelected(string[0])">
             {{ string[0] }}
           </div>
         </td>        
@@ -131,7 +131,7 @@ body {
       padding: 0;
       border: 1px solid black;
       width: 5rem;
-      height: 1.5rem;
+      height: 2rem;
       position: relative;
       text-align: center;
       
@@ -143,12 +143,14 @@ body {
       }
 
       .note {
+        box-sizing: border-box;
         height: 100%;
-        line-height: 1.3rem;
+        line-height: 2rem;
       }
 
       .note.base {
-        border: 2px dashed black;
+        border: .2rem dashed red;
+        font-weight: bold;
       }
 
     }
