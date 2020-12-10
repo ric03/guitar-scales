@@ -1,6 +1,8 @@
 <template>
   <div id="app">
 
+    <h1>Guitar scales</h1>
+
     <div class="selection">
       <select name="notes" v-model="current.base">
         <option v-for="(note, index) in availableNotes" :key="index" :value="note">{{ note }}</option>
