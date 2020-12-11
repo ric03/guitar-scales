@@ -12,9 +12,13 @@
       </select>    
     </div>
 
+    <div class="notes">
+      <div v-for="(note, index) in selected" :key="index" class="note">{{ note }}</div>
+    </div>
+
     <table class="neck">
       <tr class="frets" v-for="(string, index) in strings" :key="index">
-        <td class="fret" v-for="fret in getFretsFor(string)" :key="fret" >
+        <td class="fret" v-for="(fret, index) in getFretsFor(string)" :key="index" >
           <div :class="[{ base: fret === current.base }, 'note']" v-show="isSelected(fret)">
             {{ fret }}
           </div>
@@ -22,14 +26,11 @@
       </tr>
       <tr class="markings">
         <td class="marking" v-for="fret in frets" :key="fret" >
-          <div :class="'fret ' + 'fret_' + fret" ></div>
+          <div :class="[{ single: isSingle(fret) }, { double: isDouble(fret) }, 'fret']" >
+          </div>
         </td>
       </tr>
     </table>
-
-    <div class="notes">
-      {{ selected }}
-    </div>
 
     <footer>
       <a href="https://github.com/SMoni/guitar-scales" target="_blank">Source code</a>
@@ -85,11 +86,14 @@ export default {
       this.current.mode = types[type][mode]
     },
     getFretsFor: function(string) {
-
-      const result = this.frets.map(fret => string[fret % string.length])
-
-      return result
-    }
+      return this.frets.map(fret => string[fret % string.length])
+    },
+    isSingle: function(fret) {
+      return this.markings.single.includes(fret)      
+    },
+    isDouble: function(fret) {
+      return this.markings.double.includes(fret)      
+    }    
   },
   data() {
     return {
@@ -98,7 +102,11 @@ export default {
         base: 'C',
         mode: modes.major
       },
-      frets: _.keys(new Array(21))
+      frets: _.keys(new Array(21)),
+      markings: {
+        single: [ '3', '5', '7', '9', '15', '17', '19' ],
+        double: [ '12' ]
+      }
     }
   }
 }
@@ -132,6 +140,22 @@ footer {
 
   margin-bottom: 2rem;
 
+}
+
+.notes {
+
+  width: 100%;
+  display: inline-flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+
+  .note {
+    text-align: center;
+    background-color: silver;
+    padding: .8rem;
+    border: 1px solid grey;
+    width: 4rem;
+  }
 }
 
 .neck {
@@ -174,27 +198,21 @@ footer {
 
     .marking {
       position: relative;
-      height: 1.5rem;
+      height: 2rem;
 
       .fret {
-
+        line-height: 2rem;
         position: absolute;
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        font-size: 2rem;
+        font-size: 1.8rem;
 
-        &.fret_3::before,
-        &.fret_5::before,
-        &.fret_7::before,
-        &.fret_9::before,
-        &.fret_15::before,
-        &.fret_17::before,
-        &.fret_19::before {
+        &.single::before {
           content: '\25CF';
         }
 
-        &.fret_12::before {
+        &.double::before {
           content: '\25CF\25CF';
         }
 
@@ -202,12 +220,5 @@ footer {
     }
   }
 }
-
-.notes {
-
-  background-color: silver;
-  padding: 1rem;
-}
-
 
 </style>
