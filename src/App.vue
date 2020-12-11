@@ -40,6 +40,12 @@
     <div>
       {{ selected }}
     </div>
+
+    <hr>
+
+    <footer>
+      <a href="https://github.com/SMoni/guitar-scales" target="_blank">Source code</a>
+    </footer>
   </div>
 </template>
 
@@ -184,6 +190,13 @@ body {
       }
     }
   }
+}
+
+footer {
+  position: fixed;
+  bottom: 1rem;
+  width: 100%;
+  text-align: center;
 }
 
 </style>
