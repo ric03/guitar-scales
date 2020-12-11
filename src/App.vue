@@ -14,34 +14,22 @@
 
     <table class="neck">
       <tr class="frets" v-for="(string, index) in strings" :key="index">
-        <td class="fret" v-for="(note, index) in string" :key="index" >
-          <div :class="[{ base: note === current.base }, 'note']" v-show="isSelected(note)">
-            {{ note }}
+        <td class="fret" v-for="fret in getFretsFor(string)" :key="fret" >
+          <div :class="[{ base: fret === current.base }, 'note']" v-show="isSelected(fret)">
+            {{ fret }}
           </div>
         </td>
-        <td class="fret">
-          <div :class="[{ base: string[0] === current.base }, 'note']" v-show="isSelected(string[0])">
-            {{ string[0] }}
-          </div>
-        </td>        
       </tr>
       <tr class="markings">
-        <td class="marking" v-for="(_, index) in strings[0]" :key="index" >
-          <div :class="'fret ' + 'fret_' + index" ></div>
+        <td class="marking" v-for="fret in frets" :key="fret" >
+          <div :class="'fret ' + 'fret_' + fret" ></div>
         </td>
-        <td class="marking">
-          <div class="fret fret_12" ></div>
-        </td>        
       </tr>
     </table>
 
-    <hr>
-
-    <div>
+    <div class="notes">
       {{ selected }}
     </div>
-
-    <hr>
 
     <footer>
       <a href="https://github.com/SMoni/guitar-scales" target="_blank">Source code</a>
@@ -50,6 +38,7 @@
 </template>
 
 <script>
+import 'normalize.css'
 import _ from 'lodash'
 import createToneScaleOf from '@/tools/tonescale.js'
 import { modes, chords, scales } from '@/tools/constants.js'
@@ -94,6 +83,12 @@ export default {
       const [ type, mode ] = event.target.value.split('.')
 
       this.current.mode = types[type][mode]
+    },
+    getFretsFor: function(string) {
+
+      const result = this.frets.map(fret => string[fret % string.length])
+
+      return result
     }
   },
   data() {
@@ -102,7 +97,8 @@ export default {
       current: {
         base: 'C',
         mode: modes.major
-      }
+      },
+      frets: _.keys(new Array(21))
     }
   }
 }
@@ -112,11 +108,22 @@ export default {
 
 body {
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  margin: 2rem;
+}
+
+h1 {
+  text-align: center;
+}
+
+footer {
+  position: fixed;
+  bottom: 1rem;
+  width: 100%;
+  text-align: center;
 }
 
 .selection {
 
-  margin: auto;
   text-align: center;
 
   * {
@@ -130,6 +137,7 @@ body {
 .neck {
 
   border-collapse: collapse;
+  margin-bottom: 1rem;
 
   .frets {
 
@@ -179,7 +187,10 @@ body {
         &.fret_3::before,
         &.fret_5::before,
         &.fret_7::before,
-        &.fret_9::before {
+        &.fret_9::before,
+        &.fret_15::before,
+        &.fret_17::before,
+        &.fret_19::before {
           content: '\25CF';
         }
 
@@ -192,11 +203,11 @@ body {
   }
 }
 
-footer {
-  position: fixed;
-  bottom: 1rem;
-  width: 100%;
-  text-align: center;
+.notes {
+
+  background-color: silver;
+  padding: 1rem;
 }
+
 
 </style>
