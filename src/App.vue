@@ -17,8 +17,8 @@
     </div>
 
     <table class="neck">
-      <tr class="frets" v-for="(string, index) in strings" :key="index">
-        <td class="fret" v-for="(fret, index) in getFretsFor(string)" :key="index" >
+      <tr class="frets" v-for="(string, index) in neck.strings" :key="index">
+        <td class="fret" v-for="(fret, index) in string" :key="index" >
           <div :class="[{ base: fret === current.base }, 'note']" v-show="isSelected(fret)">
             {{ fret }}
           </div>
@@ -64,15 +64,20 @@ export default {
     selected() {
       return this.tonescale.getScaleOf(this.current.base, this.current.mode)
     },
-    strings() {
-      return [
-        this.tonescale.getRangeStartingWith('E'),
-        this.tonescale.getRangeStartingWith('B'),
-        this.tonescale.getRangeStartingWith('G'),
-        this.tonescale.getRangeStartingWith('D'),
-        this.tonescale.getRangeStartingWith('A'),
-        this.tonescale.getRangeStartingWith('E')
-      ]
+    neck() {
+      return {
+        strings: [
+          this.getFretsFor(this.tonescale.getRangeStartingWith('E')),
+          this.getFretsFor(this.tonescale.getRangeStartingWith('B')),
+          this.getFretsFor(this.tonescale.getRangeStartingWith('G')),
+          this.getFretsFor(this.tonescale.getRangeStartingWith('D')),
+          this.getFretsFor(this.tonescale.getRangeStartingWith('A')),
+          this.getFretsFor(this.tonescale.getRangeStartingWith('E'))
+        ],
+        markings: [
+          
+        ]
+      } 
     }
   },
   methods: {
