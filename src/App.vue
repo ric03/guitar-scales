@@ -25,9 +25,8 @@
         </td>
       </tr>
       <tr class="markings">
-        <td class="marking" v-for="fret in frets" :key="fret" >
-          <div :class="[{ single: isSingle(fret) }, { double: isDouble(fret) }, 'fret']" >
-          </div>
+        <td class="marking" v-for="(marking, index) in neck.markings" :key="index" >
+          <div :class="[marking, 'fret']" ></div>
         </td>
       </tr>
     </table>
@@ -74,9 +73,16 @@ export default {
           this.getFretsFor(this.tonescale.getRangeStartingWith('A')),
           this.getFretsFor(this.tonescale.getRangeStartingWith('E'))
         ],
-        markings: [
+        markings: this.frets.map(fret => {
+
+          if(this.isSingle(fret))
+            return 'single'
+
+          if(this.isDouble(fret))
+            return 'double'
           
-        ]
+          return ''
+        })
       } 
     }
   },
