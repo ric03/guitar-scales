@@ -12,6 +12,7 @@ Little tool to help finding the notes on a guitar fret based on the chromatic sc
 * ionian
 * dorian
 * phrygian
+* phrygianDominant
 * lydian
 * mixolydian
 * aeolian
