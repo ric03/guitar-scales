@@ -14,6 +14,7 @@
 
     <div class="notes">
       <div v-for="(note, index) in selected" :key="index" class="note">{{ note }}</div>
+      <!-- <div class="">{{ selected }}</div> -->
     </div>
 
     <table class="neck">
@@ -104,7 +105,7 @@ export default {
     },
     isDouble: function(fret) {
       return this.markings.double.includes(fret)      
-    }    
+    }
   },
   data() {
     return {

@@ -8,6 +8,7 @@ const modes = {
     minor:            [ 2, 1, 2, 2, 1, 2, 2 ], // aeolian
     minorPentatonic:  [ 3, 2, 2, 3 ], 
     minorHarmonic:    [ 2, 1, 2, 2, 1, 3, 1 ],
+    bluesHexatonic:   [ 3, 2, 1, 1, 3 ], 
     ionian:           [ 2, 2, 1, 2, 2, 2, 1 ],
     dorian:           [ 2, 1, 2, 2, 2, 1, 2 ],
     phrygian:         [ 1, 2, 2, 2, 1, 2, 2 ],
