@@ -32,6 +32,8 @@
       </tr>
     </table>
 
+    <div class="flipFretboard" @click="flipFretboard">Flip fretboard</div>
+
     <footer>
       <a href="https://github.com/SMoni/guitar-scales" target="_blank">Source code</a>
     </footer>
@@ -64,30 +66,37 @@ export default {
     selected() {
       return this.tonescale.getScaleOf(this.current.base, this.current.mode)
     },
+    orderedStrings() {
+
+      const result = [...this.strings]
+
+      return this.flipped ? result.reverse() : result
+    },
     neck() {
+
+      const strings = this.orderedStrings.map(this.getFretsByTonescale)
+
+      const markings = this.frets.map(fret => {
+
+        if(this.isSingle(fret))
+          return 'single'
+
+        if(this.isDouble(fret))
+          return 'double'
+        
+        return ''
+      })
+
       return {
-        strings: [
-          this.getFretsFor(this.tonescale.getRangeStartingWith('E')),
-          this.getFretsFor(this.tonescale.getRangeStartingWith('B')),
-          this.getFretsFor(this.tonescale.getRangeStartingWith('G')),
-          this.getFretsFor(this.tonescale.getRangeStartingWith('D')),
-          this.getFretsFor(this.tonescale.getRangeStartingWith('A')),
-          this.getFretsFor(this.tonescale.getRangeStartingWith('E'))
-        ],
-        markings: this.frets.map(fret => {
-
-          if(this.isSingle(fret))
-            return 'single'
-
-          if(this.isDouble(fret))
-            return 'double'
-          
-          return ''
-        })
+        strings: strings,
+        markings: markings
       } 
     }
   },
   methods: {
+    flipFretboard: function() {
+      this.flipped = !this.flipped
+    },
     isSelected: function(note) {
       return this.selected.includes(note)
     },
@@ -97,8 +106,14 @@ export default {
 
       this.current.mode = types[type][mode]
     },
-    getFretsFor: function(string) {
-      return this.frets.map(fret => string[fret % string.length])
+    getFretsByTonescale: function(thisNote) {
+
+      const range = this.tonescale.getRangeStartingWith(thisNote)
+
+      return this.getFretsFor(range)
+    },
+    getFretsFor: function(range) {
+      return this.frets.map(fret => range[fret % range.length])
     },
     isSingle: function(fret) {
       return this.markings.single.includes(fret)      
@@ -118,7 +133,11 @@ export default {
       markings: {
         single: [ '3', '5', '7', '9', '15', '17', '19' ],
         double: [ '12' ]
-      }
+      },
+      strings: [
+        'E', 'B', 'G', 'D', 'A', 'E'
+      ],
+      flipped: false
     }
   }
 }
@@ -196,13 +215,13 @@ footer {
         box-sizing: border-box;
         height: 100%;
         line-height: 2rem;
-      }
+        border: .2rem solid transparent;
 
-      .note.base {
-        border: .2rem dashed red;
-        font-weight: bold;
+        &.base {
+          border: .2rem dashed red;
+          font-weight: bold;
+        }        
       }
-
     }
   }
 
@@ -231,6 +250,14 @@ footer {
       }
     }
   }
+}
+
+.flipFretboard {
+  box-shadow: 0px 0px 1rem gray;
+  border-radius: .5rem;
+  text-align: center;
+  padding: .5rem;
+  cursor: pointer;
 }
 
 </style>
