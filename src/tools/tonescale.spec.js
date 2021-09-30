@@ -1,43 +1,19 @@
-import {suite} from 'uvu';
-import * as fc from 'fast-check';
-import {scales} from './constants.js';
-import createToneScaleOf from './tonescale.js';
+var jsc = require("jsverify");
+const {scales, modes} = require('./constants.js')
+const createToneScaleOf = require("./tonescale.js")
 
-import * as assert from 'uvu/assert';
+describe('tonescale', function () {
+    it('should work', () => {
+        // forall (f : bool -> bool) (b : bool), f (f (f b)) = f(b).
+        var boolFnAppliedThrice =
+            jsc.forall("bool -> bool", "bool", function (f, b) {
+                return f(f(f(b))) === f(b);
+            });
 
-const notes = fc.stringOf(fc.constantFrom('C', 'D'), {minLength: 1, maxLength: 1});
-
-const getRangeStartingWith = suite('getRangeStartingWith');
-
-getRangeStartingWith('result always starts with the given note', () => {
-    const {getRangeStartingWith} = createToneScaleOf(scales.chromatic);
-
-    fc.assert(fc.property(
-        notes,
-        note => {
-            const [firstNote] = getRangeStartingWith(note);
-            assert.is(firstNote, note);
-        }));
+        jsc.assert(boolFnAppliedThrice);
+    })
+    it('should ', () => {
+        const {getScaleOf} = createToneScaleOf(scales.chromatic)
+        console.log(getScaleOf('C', modes.major))
+    })
 });
-
-getRangeStartingWith('fc length is always 12 for chromatic scale', () => {
-    const {getRangeStartingWith} = createToneScaleOf(scales.chromatic);
-
-    fc.assert(fc.property(
-        notes,
-        note => {
-
-            const range = getRangeStartingWith(note);
-            assert.is(range.length, 8);
-            // return range.length === 8;
-        }));
-});
-
-// getRangeStartingWith('length is always 12 for chromatic scale', () => {
-//     const {getRangeStartingWith} = createToneScaleOf(scales.chromatic);
-//
-//     const range = getRangeStartingWith('C');
-//     assert.is(range.length, 8);
-// });
-
-getRangeStartingWith.run();
